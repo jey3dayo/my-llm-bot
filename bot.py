@@ -26,7 +26,8 @@ def message_hello(body, say, client):
     thread_ts = message["ts"]
 
     response_message = openai_utils.get_party_call_response(client, message)
-    say(text=response_message, channel=channel, thread_ts=thread_ts)
+    if response_message:
+        say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
 # mentionに反応
@@ -39,7 +40,8 @@ def mention_handler(body, say):
 
     print(f"メンションされました: {text}")
     response_message = openai_utils.get_chat_simple_response(text)
-    say(text=response_message, channel=channel, thread_ts=thread_ts)
+    if response_message:
+        say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
 if __name__ == "__main__":
