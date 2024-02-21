@@ -6,7 +6,7 @@ import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from .constants import DEFAULT_MODEL
+from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL
 
 # FIXME: RAGで使いたかった
 emoji_list = """
@@ -87,11 +87,13 @@ def get_party_call_response(client, message):
     try:
         csv_content = StringIO(emotions_response.content.strip())
         reader = csv.reader(csv_content)
-        emotions = next(reader, ["thumbsup"])
+        emotions = next(reader, DEFAULT_EMOTIONS)
         if not emotions:
             raise ValueError("Emotions list is empty.")
     except (csv.Error, ValueError) as e:
-        print(f"Error processing CSV content: {e}")
+        print(
+            f"Error processing CSV content: {e}, input was: {emotions_response.content}"
+        )
         emotions = []
 
     if emotions:
