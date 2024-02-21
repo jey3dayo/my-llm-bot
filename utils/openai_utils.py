@@ -87,9 +87,7 @@ def get_party_call_response(client, message):
     try:
         csv_content = StringIO(emotions_response.content.strip())
         reader = csv.reader(csv_content)
-        emotions = next(reader, DEFAULT_EMOTIONS)
-        if not emotions:
-            emotions = DEFAULT_EMOTIONS
+        emotions = next(reader, DEFAULT_EMOTIONS) or DEFAULT_EMOTIONS
     except csv.Error as e:
         print(
             f"Error processing CSV content: {e}, input was: {emotions_response.content}"

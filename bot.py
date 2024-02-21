@@ -30,7 +30,7 @@ def mention_handler(body, say):
 
     print(f"メンションされました: {text}")
     response_message = openai_utils.get_chat_simple_response(text)
-    if response_message.strip():
+    if not response_message.strip() == "":
         say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
