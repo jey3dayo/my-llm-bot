@@ -9,6 +9,7 @@ on:
     types: [opened, reopened, synchronize]
   issue_comment:
     types: [created, edited]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.repository }}-${{ github.event.number || github.head_ref || github.sha }}-${{ github.workflow }}-${{ github.event_name == 'pull_request_review_comment' && 'pr_comment' || 'pr' }}
