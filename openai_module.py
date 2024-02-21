@@ -33,8 +33,18 @@ emotion_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            # '発言に応じて、slackのemotionを複数個、json形式で返します 例: { "emotion": ["thumbsup", "beers", "dancer" }',
-            "発言に応じて、slackのemotionを返します 例: thumbsup, beers, dancer",
+            "発言に応じて、slackのemotionを必ず1つ返します 例: thumbsup,beers,dancer",
+        ),
+        ("user", "{input}"),
+    ]
+)
+
+emotions_prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            # "発言に応じて、slackのemotionを複数個、csv形式で返します 例: thumbsup, beers, dancer",
+            "発言に応じて、slackのemotionを6個、csv形式で返します 例: thumbsup, beers, dancer",
         ),
         ("user", "{input}"),
     ]
@@ -63,14 +73,22 @@ def get_party_call_response(client, message):
     chain = party_prompt | llm
     response = chain.invoke({"input": text})
     response_message = response.content
+    # print(response_message)
 
-    chain = emotion_prompt | llm
-    emotion_response = chain.invoke({"input": response_message})
-    emotion_name = emotion_response.content
-    print(emotion_response)
-    print(f"emotion_name: ${emotion_name}")
+    chain = emotions_prompt | llm
+    emotions_response = chain.invoke({"input": response_message})
 
-    if emotion_name:
-        client.reactions_add(channel=channel, name=emotion_name, timestamp=thread_ts)
+    # csvで返ってくるので、カンマでsplitしてリストにする
+    emotions = [item.strip() for item in emotions_response.content.split(",")]
+
+    if emotions:
+        # emotionsをループして、reactionをつける
+        for emotion in emotions:
+            print(emotion)
+            # エラーが出てもやめない
+            try:
+                client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
+            except Exception as e:
+                print(e)
 
     return response_message
