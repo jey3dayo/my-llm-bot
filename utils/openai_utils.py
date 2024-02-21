@@ -75,10 +75,9 @@ def get_party_call_response(client, message):
     response_message = response.content
     # print(response_message)
 
+    # csvで返ってくるので、カンマでsplitしてリストにする
     chain = emotions_prompt | llm
     emotions_response = chain.invoke({"input": response_message})
-
-    # csvで返ってくるので、カンマでsplitしてリストにする
     emotions = [item.strip() for item in emotions_response.content.split(",")]
 
     if emotions:
