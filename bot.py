@@ -6,8 +6,6 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from utils import openai_utils
 
-load_dotenv()
-
 # OAuth Token
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 
@@ -45,4 +43,5 @@ def mention_handler(body, say):
 
 
 if __name__ == "__main__":
+    load_dotenv()
     SocketModeHandler(app, SLACK_APP_TOKEN).start()
