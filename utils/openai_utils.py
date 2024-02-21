@@ -95,6 +95,6 @@ def get_party_call_response(client, message):
     if emotions:
         # emotionsをループしてreactionをつける
         for emotion in emotions:
-            add_reactions_to_channel(client, channel, emotion, thread_ts)
+            add_reactions_to_channel(client, channel, emotion.strip(), thread_ts)
 
     return response_content
