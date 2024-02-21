@@ -4,9 +4,8 @@ from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-# My AI Bot
-
-load_dotenv()
+if not os.getenv("OPENAI_API_KEY"):
+    load_dotenv()
 
 # OAuth Token
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
