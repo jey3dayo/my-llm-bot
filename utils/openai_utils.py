@@ -2,6 +2,7 @@ import csv
 import os
 from io import StringIO
 
+import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
@@ -64,8 +65,9 @@ def add_reactions_to_channel(client, channel, emotion, thread_ts):
     try:
         print(emotion)
         client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
-    except Exception as e:
-        print(f"Error adding reaction {emotion}: {e}")
+
+    except slack_sdk.errors.SlackApiError as e:
+        print(f"Slack API error adding reaction {emotion}: {e.response['error']}")
 
 
 # emotionをつける関数
