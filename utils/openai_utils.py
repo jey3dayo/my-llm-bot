@@ -63,8 +63,7 @@ def add_reactions_to_channel(client, channel, emotion, thread_ts):
     """Add reactions to a channel for each emotion."""
     try:
         print(emotion)
-        client.reactions_add(
-            channel=channel, name=emotion, timestamp=thread_ts)
+        client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
     except Exception as e:
         print(f"Error adding reaction {emotion}: {e}")
 
@@ -82,8 +81,12 @@ def get_party_call_response(client, message):
     # csvからemotionを抽出
     chain = emotions_prompt | llm
     emotions_response = chain.invoke({"input": response_content})
-    emotions = next(csv.reader(
-        StringIO(emotions_response.content.strip())), [])
+
+    try:
+        emotions = next(csv.reader(StringIO(emotions_response.content.strip())), [])
+    except csv.Error as e:
+        print(f"CSV parsing error: {e}")
+        emotions = []
 
     if emotions:
         # emotionsをループしてreactionをつける
