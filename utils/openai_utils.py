@@ -1,4 +1,6 @@
+import csv
 import os
+from io import StringIO
 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
@@ -44,7 +46,7 @@ emotions_prompt = ChatPromptTemplate.from_messages(
         (
             "system",
             # "発言に応じて、slackのemotionを複数個、csv形式で返します 例: thumbsup, beers, dancer",
-            "発言に応じて、slackのemotionを6個、csv形式で返します 例: thumbsup, beers, dancer",
+            "発言に応じて、slackのemotionを6個、csv形式で返します 例: thumbsup,beers,dancer",
         ),
         ("user", "{input}"),
     ]
@@ -57,11 +59,13 @@ def get_chat_simple_response(input):
     return response.content
 
 
-# 懇親会を盛り上げる関数
-# def get_party_call_response(input):
-#     chain = party_prompt | llm
-#     response = chain.invoke({"input": input})
-#     return response.content
+def add_reactions_to_channel(client, channel, emotions, thread_ts):
+    """Add reactions to a channel for each emotion."""
+    for emotion in emotions:
+        try:
+            client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
+        except Exception as e:
+            print(f"Error adding reaction {emotion}: {e}")
 
 
 # emotionをつける関数
@@ -72,22 +76,16 @@ def get_party_call_response(client, message):
 
     chain = party_prompt | llm
     response = chain.invoke({"input": text})
-    response_message = response.content
-    # print(response_message)
+    response_content = response.content
 
-    # csvで返ってくるので、カンマでsplitしてリストにする
+    # csvからemotionを抽出
     chain = emotions_prompt | llm
-    emotions_response = chain.invoke({"input": response_message})
-    emotions = [item.strip() for item in emotions_response.content.split(",")]
+    emotions_response = chain.invoke({"input": response_content})
+    emotions = [row for row in csv.reader(StringIO(emotions_response.content.strip()))]
 
     if emotions:
-        # emotionsをループして、reactionをつける
+        # emotionsをループしてreactionをつける
         for emotion in emotions:
-            print(emotion)
-            # エラーが出てもやめない
-            try:
-                client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
-            except Exception as e:
-                print(e)
+            add_reactions_to_channel(client, channel, emotion, thread_ts)
 
-    return response_message
+    return response_content
