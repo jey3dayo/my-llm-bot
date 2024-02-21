@@ -3,7 +3,7 @@ import os
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
-from utils.constants import DEFAULT_MODEL
+from .constants import DEFAULT_MODEL
 
 # FIXME: RAGで使いたかった
 emoji_list = """
