@@ -1,18 +1,8 @@
-import os
-
-from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from utils import openai_utils
-
-load_dotenv()
-
-# OAuth Token
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
-
-# App-Level Token
-SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
+from utils.constants import SLACK_APP_TOKEN, SLACK_BOT_TOKEN
 
 # [OAuth Token]読み込み
 app = App(token=SLACK_BOT_TOKEN)
@@ -20,7 +10,7 @@ app = App(token=SLACK_BOT_TOKEN)
 
 # 反応する発言内容を記載
 @app.message("懇親会|飲み会|女子会|パーティ")
-def message_hello(body, say, client):
+def party_handler(body, say, client):
     message = body["event"]
     channel = message["channel"]
     thread_ts = message["ts"]
