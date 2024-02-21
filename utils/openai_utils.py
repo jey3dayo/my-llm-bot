@@ -89,12 +89,12 @@ def get_party_call_response(client, message):
         reader = csv.reader(csv_content)
         emotions = next(reader, DEFAULT_EMOTIONS)
         if not emotions:
-            raise ValueError("Emotions list is empty.")
+            emotions = DEFAULT_EMOTIONS
     except (csv.Error, ValueError) as e:
         print(
             f"Error processing CSV content: {e}, input was: {emotions_response.content}"
         )
-        emotions = []
+        emotions = DEFAULT_EMOTIONS
 
     if emotions:
         # emotionsをループしてreactionをつける
