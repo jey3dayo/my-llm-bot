@@ -4,8 +4,7 @@ from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-from utils/openai_module import (get_chat_simple_response,
-                                 get_party_call_response)
+from utils.openai_module import get_chat_simple_response, get_party_call_response
 
 load_dotenv()
 
