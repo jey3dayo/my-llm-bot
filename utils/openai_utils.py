@@ -87,7 +87,7 @@ def get_party_call_response(client, message):
     try:
         csv_content = StringIO(emotions_response.content.strip())
         reader = csv.reader(csv_content)
-        emotions = next(reader, [])
+        emotions = next(reader, ["thumbsup"])
         if not emotions:
             raise ValueError("Emotions list is empty.")
     except (csv.Error, ValueError) as e:
