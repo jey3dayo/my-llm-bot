@@ -83,9 +83,13 @@ def get_party_call_response(client, message):
     emotions_response = chain.invoke({"input": response_content})
 
     try:
-        emotions = next(csv.reader(StringIO(emotions_response.content.strip())), [])
-    except csv.Error as e:
-        print(f"CSV parsing error: {e}")
+        csv_content = StringIO(emotions_response.content.strip())
+        reader = csv.reader(csv_content)
+        emotions = next(reader, [])
+        if not emotions:
+            raise ValueError("Emotions list is empty.")
+    except (csv.Error, ValueError) as e:
+        print(f"Error processing CSV content: {e}")
         emotions = []
 
     if emotions:

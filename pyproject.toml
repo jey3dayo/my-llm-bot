@@ -18,3 +18,6 @@ slack-sdk = "^3.27.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[pycodestyle]
+max-line-length = 160
