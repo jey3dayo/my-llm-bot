@@ -1,18 +1,8 @@
-import os
-
-from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-from openai_module import get_chat_simple_response, get_party_call_response
-
-load_dotenv()
-
-# OAuth Token
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
-
-# App-Level Token
-SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
+from utils import openai_utils
+from utils.constants import SLACK_APP_TOKEN, SLACK_BOT_TOKEN
 
 # [OAuth Token]読み込み
 app = App(token=SLACK_BOT_TOKEN)
@@ -20,14 +10,14 @@ app = App(token=SLACK_BOT_TOKEN)
 
 # 反応する発言内容を記載
 @app.message("懇親会|飲み会|女子会|パーティ")
-def message_hello(body, say, client):
+def party_handler(body, say, client):
     message = body["event"]
-    text = message["text"]
     channel = message["channel"]
     thread_ts = message["ts"]
 
-    response_message = get_party_call_response(client, message)
-    say(text=response_message, channel=channel, thread_ts=thread_ts)
+    response_message = openai_utils.get_party_call_response(client, message)
+    if response_message.strip():
+        say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
 # mentionに反応
@@ -39,8 +29,9 @@ def mention_handler(body, say):
     thread_ts = message["ts"]
 
     print(f"メンションされました: {text}")
-    response_message = get_chat_simple_response(text)
-    say(text=response_message, channel=channel, thread_ts=thread_ts)
+    response_message = openai_utils.get_chat_simple_response(text)
+    if not response_message.strip() == "":
+        say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
 if __name__ == "__main__":
