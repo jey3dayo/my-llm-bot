@@ -3,6 +3,7 @@ import os
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from pydantic.v1 import SecretStr
 
 from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL
 from .csv import parse_csv
@@ -12,8 +13,15 @@ emoji_list = """
 :emoji:
 """
 
+api_key_value = os.getenv("OPENAI_API_KEY")
+if not api_key_value:
+    raise ValueError("環境変数 'OPENAI_API_KEY' が設定されていません。")
+api_key = SecretStr(api_key_value)
+
 llm = ChatOpenAI(
-    api_key=os.environ["OPENAI_API_KEY"], model=DEFAULT_MODEL, temperature=0.9
+    api_key=api_key,
+    model=DEFAULT_MODEL,
+    temperature=0.9,
 )
 
 prompt = ChatPromptTemplate.from_messages(

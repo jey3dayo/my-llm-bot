@@ -32,10 +32,12 @@ jobs:
           - 置換でいじってはいけない
           - オブジェクトまたはライブラリを使ってください
           - 利用技術
-            - Python v3.8
+            - Python v3.12
             - OpenAI API
             - langchain
             - Bolt
+            - Pyright
+            - black
     steps:
       - name: PR Agent action step
         id: pragent
