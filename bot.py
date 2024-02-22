@@ -20,6 +20,15 @@ def party_handler(body, say, client):
         say(text=response_message, channel=channel, thread_ts=thread_ts)
 
 
+@app.message("^hi")
+def hi_handler(body, say):
+    message = body["event"]
+    channel = message["channel"]
+    thread_ts = message["ts"]
+
+    say(text="hi", channel=channel, thread_ts=thread_ts)
+
+
 # mentionに反応
 @app.event("app_mention")
 def mention_handler(body, say):
