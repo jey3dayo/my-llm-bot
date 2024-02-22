@@ -42,10 +42,12 @@ def mention_handler(body, say):
 def direct_message_handler(body, say):
     event = body["event"]
 
-    print(f"DMが送られました: {event['text']}")
-    response_message = openai_utils.get_chat_simple_response(event["text"])
-    if not response_message.strip() == "":
-        say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
+    # メッセージがDMから来たものかどうかをチェック
+    if event["channel_type"] == "im":
+        print(f"DMが送られました: {event['text']}")
+        response_message = openai_utils.get_chat_simple_response(event["text"])
+        if not response_message.strip() == "":
+            say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
 
 if __name__ == "__main__":
