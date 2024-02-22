@@ -14,7 +14,7 @@ slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
 # [OAuth Token]読み込み
 app = App(token=SLACK_BOT_TOKEN)
 
-logging.basicConfig(filename="example.log", encoding="utf-8", level=LOGGING_LEVEL)
+logging.basicConfig(encoding="utf-8", level=LOGGING_LEVEL)
 
 
 def get_thread_text(event):
