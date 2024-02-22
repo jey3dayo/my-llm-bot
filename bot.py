@@ -1,3 +1,4 @@
+import logging
 import re
 
 import slack_sdk
@@ -7,8 +8,25 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from utils import openai_utils
 from utils.constants import SLACK_APP_TOKEN, SLACK_BOT_TOKEN
 
+# Initialize the Slack client
+slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
+
 # [OAuth Token]読み込み
 app = App(token=SLACK_BOT_TOKEN)
+
+
+def get_thread_text(event):
+    """Retrieve all messages from a thread."""
+    if "thread_ts" in event and event["thread_ts"] is not None:
+        response = slack_client.conversations_replies(
+            channel=event["channel"], ts=event["thread_ts"]
+        )
+        logging.info(response)
+        return ",".join(
+            [re.sub("<.*?> ", "", message["text"]) for message in response["messages"]]
+        )
+    else:
+        return re.sub("<.*?> ", "", event["text"])
 
 
 # 反応する発言内容を記載
@@ -36,26 +54,9 @@ def mention_handler(body, say):
     print(f"メンションされました: {event['text']}")
 
     # スレッドの全てのメッセージを取得
-    request_message = ""
-
-    # thread_tsがある場合
-    if "thread_ts" in event and event["thread_ts"] is not None:
-        # スレッドの全てのメッセージを取得
-        client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
-        response = client.conversations_replies(
-            channel=event["channel"], ts=event["thread_ts"]
-        )
-
-        # スレッドの全てのメッセージを渡す
-        thread_text = ",".join(
-            [re.sub("<.*?> ", "", message["text"]) for message in response["messages"]]
-        )
-        request_message = thread_text
-    else:
-        request_message = re.sub("<.*?> ", "", event["text"])
-
-    print(f"request: {request_message}")
-    response_message = openai_utils.get_chat_simple_response(request_message)
+    send_message = get_thread_text(event)
+    print(f"request: {send_message}")
+    response_message = openai_utils.get_chat_simple_response(send_message)
     if not response_message.strip() == "":
         say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
@@ -68,7 +69,10 @@ def direct_message_handler(body, say):
     # メッセージがDMから来たものかどうかをチェック
     if event["channel_type"] == "im":
         print(f"DMが送られました: {event['text']}")
-        response_message = openai_utils.get_chat_simple_response(event["text"])
+
+        # スレッドの全てのメッセージを取得
+        send_message = get_thread_text(event)
+        response_message = openai_utils.get_chat_simple_response(send_message)
         if not response_message.strip() == "":
             say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
