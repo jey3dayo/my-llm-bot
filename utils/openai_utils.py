@@ -25,7 +25,13 @@ llm = ChatOpenAI(
 )
 
 prompt = ChatPromptTemplate.from_messages(
-    [("system", "あなたのお役立ちボット"), ("user", "{input}")]
+    [
+        (
+            "system",
+            "あなたのお役立ちボット。slackの発言を理解できます。",
+        ),
+        ("user", "{input}"),
+    ]
 )
 
 party_prompt = ChatPromptTemplate.from_messages(
