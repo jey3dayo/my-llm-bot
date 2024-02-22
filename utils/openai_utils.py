@@ -13,8 +13,13 @@ emoji_list = """
 :emoji:
 """
 
+api_key_value = os.getenv("OPENAI_API_KEY")
+if not api_key_value:
+    raise ValueError("環境変数 'OPENAI_API_KEY' が設定されていません。")
+api_key = SecretStr(api_key_value)
+
 llm = ChatOpenAI(
-    api_key=SecretStr(os.getenv("OPENAI_API_KEY", "")),
+    api_key=api_key,
     model=DEFAULT_MODEL,
     temperature=0.9,
 )
