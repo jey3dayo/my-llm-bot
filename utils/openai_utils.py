@@ -3,6 +3,7 @@ import os
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from pydantic.v1 import SecretStr
 
 from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL
 from .csv import parse_csv
@@ -13,7 +14,7 @@ emoji_list = """
 """
 
 llm = ChatOpenAI(
-    api_key=os.environ["OPENAI_API_KEY"],
+    api_key=SecretStr(os.getenv("OPENAI_API_KEY", "")),
     model=DEFAULT_MODEL,
     temperature=0.9,
 )
