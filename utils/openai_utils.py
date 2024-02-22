@@ -13,7 +13,9 @@ emoji_list = """
 """
 
 llm = ChatOpenAI(
-    api_key=os.environ["OPENAI_API_KEY"], model=DEFAULT_MODEL, temperature=0.9
+    api_key=os.environ["OPENAI_API_KEY"],
+    model=DEFAULT_MODEL,
+    temperature=0.9,
 )
 
 prompt = ChatPromptTemplate.from_messages(
