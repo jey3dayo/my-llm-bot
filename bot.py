@@ -72,7 +72,7 @@ def mention_handler(body, say):
         active_llm = openai_utils.extra_llm
     response_message = openai_utils.get_chat_response(send_message, active_llm)
 
-    if not response_message.strip() == "":
+    if response_message.strip():
         say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
 
