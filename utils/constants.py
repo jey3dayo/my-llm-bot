@@ -18,4 +18,4 @@ EXTRA_MODEL = os.getenv("OPENAI_EXTRA_MODEL", "gpt-4-turbo-preview")
 
 DEFAULT_EMOTIONS = ["thumbsup"]
 
-GPT4_ROOM_ID = "C06LN374PJ5"
+GPT4_ROOM_ID = os.getenv("GPT4_ROOM_ID", "")
