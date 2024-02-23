@@ -66,7 +66,8 @@ def mention_handler(body, say):
     send_message = get_thread_text(event)
 
     response_message = ""
-    if event["channel"] == GPT4_ROOM_ID:
+    channel = event["channel"]
+    if channel and channel == GPT4_ROOM_ID:
         response_message = openai_utils.get_extra_chat_simple_response(send_message)
     else:
         response_message = openai_utils.get_chat_simple_response(send_message)

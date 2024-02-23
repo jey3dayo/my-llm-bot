@@ -1,4 +1,5 @@
 import os
+from urllib.parse import quote_plus
 
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
@@ -81,7 +82,8 @@ def get_chat_simple_response(input):
 
 def get_extra_chat_simple_response(input):
     chain = prompt | extra_llm
-    response = chain.invoke({"input": input})
+    safe_input = quote_plus(input)
+    response = chain.invoke({"input": safe_input})
     return response.content
 
 
