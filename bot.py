@@ -68,7 +68,7 @@ def mention_handler(body, say):
     active_llm = openai_utils.llm
 
     channel = event.get("channel")
-    if channel and channel == GPT4_ROOM_ID:
+    if channel and GPT4_ROOM_ID and channel == GPT4_ROOM_ID:
         active_llm = openai_utils.extra_llm
     response_message = openai_utils.get_chat_response(send_message, active_llm)
 
@@ -90,7 +90,7 @@ def direct_message_handler(body, say):
         response_message = openai_utils.get_chat_response(
             send_message, openai_utils.llm
         )
-        if not response_message.strip() == "":
+        if response_message.strip():
             say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
 

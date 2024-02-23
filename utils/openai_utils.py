@@ -74,7 +74,10 @@ emotions_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-def get_chat_response(input, llm_model=llm):
+def get_chat_response(input, llm_model=None):
+    if llm_model is None:
+        llm_model = llm
+
     chain = prompt | llm_model
     safe_input = quote_plus(input)
     response = chain.invoke({"input": safe_input})
