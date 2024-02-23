@@ -1,5 +1,4 @@
 import os
-from urllib.parse import quote_plus
 
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
@@ -76,8 +75,8 @@ emotions_prompt = ChatPromptTemplate.from_messages(
 
 def get_chat_response(input, llm_model=llm):
     chain = prompt | llm_model
-    safe_input = quote_plus(input)
-    response = chain.invoke({"input": safe_input})
+    # TODO: convert safe input
+    response = chain.invoke({"input": input})
     return response.content
 
 
