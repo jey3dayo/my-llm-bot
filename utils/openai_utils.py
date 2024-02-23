@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from pydantic.v1 import SecretStr
 
-from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL
+from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL, EXTRA_MODEL
 from .csv import parse_csv
 
 # FIXME: RAGで使いたかった
@@ -21,6 +21,12 @@ api_key = SecretStr(api_key_value)
 llm = ChatOpenAI(
     api_key=api_key,
     model=DEFAULT_MODEL,
+    temperature=0.9,
+)
+
+extra_llm = ChatOpenAI(
+    api_key=api_key,
+    model=EXTRA_MODEL,
     temperature=0.9,
 )
 
@@ -69,6 +75,12 @@ emotions_prompt = ChatPromptTemplate.from_messages(
 
 def get_chat_simple_response(input):
     chain = prompt | llm
+    response = chain.invoke({"input": input})
+    return response.content
+
+
+def get_extra_chat_simple_response(input):
+    chain = prompt | extra_llm
     response = chain.invoke({"input": input})
     return response.content
 

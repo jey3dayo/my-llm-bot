@@ -6,7 +6,12 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from utils import openai_utils
-from utils.constants import LOGGING_LEVEL, SLACK_APP_TOKEN, SLACK_BOT_TOKEN
+from utils.constants import (
+    GPT4_ROOM_ID,
+    LOGGING_LEVEL,
+    SLACK_APP_TOKEN,
+    SLACK_BOT_TOKEN,
+)
 
 # Initialize the Slack client
 slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
@@ -59,7 +64,13 @@ def mention_handler(body, say):
 
     # スレッドの全てのメッセージを取得
     send_message = get_thread_text(event)
-    response_message = openai_utils.get_chat_simple_response(send_message)
+
+    response_message = ""
+    if event["channel"] == GPT4_ROOM_ID:
+        response_message = openai_utils.get_extra_chat_simple_response(send_message)
+    else:
+        response_message = openai_utils.get_chat_simple_response(send_message)
+
     if not response_message.strip() == "":
         say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
