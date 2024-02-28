@@ -18,7 +18,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pep8
+    - pycodestyle
     - black
 """
 
@@ -54,7 +54,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pep8
+    - pycodestyle
     - black
 """
 
@@ -71,7 +71,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pep8
+    - pycodestyle
     - black
 """
 
