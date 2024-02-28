@@ -1,3 +1,4 @@
+import logging
 import os
 
 import slack_sdk.errors
@@ -86,7 +87,7 @@ def add_reactions_to_channel(client, channel, emotion, thread_ts):
         client.reactions_add(channel=channel, name=emotion, timestamp=thread_ts)
 
     except slack_sdk.errors.SlackApiError as e:
-        print(f"Slack API error adding reaction {emotion}: {e.response['error']}")
+        logging.error(f"Slack API error adding reaction {emotion}: {e.response['error']}")
 
 
 # emotionをつける関数

@@ -14,9 +14,37 @@ langchain = "^0.1.8"
 langchain-openai = "^0.0.6"
 slack-sdk = "^3.27.0"
 
+[tool.poetry.group.dev.dependencies]
+black = "^24.2"
+ruff = "^0.2.2"
+taskipy = "^1.12.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pycodestyle]
-max-line-length = 160
+[tool.black]
+target-version = ['py39']
+line-length = 120
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+exclude = [".venv", ".git", "__pycache__"]
+select = ["E", "F", "RET502", "RET503", "T20"]
+ignore = ["E501", "E722", "T201"]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.taskipy.tasks]
+start-bot = "python src/bot.py"
+fmt = "task fmt-black"
+fmt-black = "black src"
+lint = "task lint-black && task lint-ruff"
+lint-ruff = "poetry run ruff src"
+lint-black = "black --check src"
