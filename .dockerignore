@@ -1,5 +1,5 @@
-**/.git
-**/.DS_Store
+.git/
+.github/
 
 venv/
 .venv/
@@ -8,3 +8,7 @@ __pycache__/
 **/__pycache__/
 *.py[cod]
 *$py.class
+
+.DS_Store
+.env*
+*.bk
