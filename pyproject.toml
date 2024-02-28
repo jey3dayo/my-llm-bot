@@ -16,16 +16,12 @@ slack-sdk = "^3.27.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.2"
-isort = "^5.13"
 ruff = "^0.2.2"
+taskipy = "^1.12.2"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.isort]
-profile = "black"
-line_length = 120
 
 [tool.black]
 target-version = ['py39']
@@ -44,3 +40,10 @@ indent-style = "space"
 quote-style = "double"
 skip-magic-trailing-comma = false
 line-ending = "lf"
+
+[tool.taskipy.tasks]
+fmt = "task fmt-black"
+fmt-black = "black src"
+lint = "task lint-black && task lint-ruff"
+lint-ruff = "poetry run ruff src"
+lint-black = "black --check src"
