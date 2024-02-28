@@ -1,8 +1,31 @@
-[pr_description]
+[config]
+model = "gpt-3.5-turbo-0613"
+enable_custom_labels = true
+
+[pr_reviewer]
+num_code_suggestions = 4
 inline_code_comments = true
+remove_previous_review_comment = true
+enable_auto_approval = true
+extra_instructions = """\
+- 日本語で回答してください
+- 以下の原則に従ってコメントしてください。
+  - URLなどの構造化テキストを文字列結合で作ってはいけない。
+  - 置換でいじってはいけない
+  - オブジェクトまたはライブラリを使ってください
+  - 利用技術
+    - Python v3.12
+    - OpenAI API
+    - langchain
+    - Bolt
+    - pep8
+    - black
+"""
+
+
+[pr_description]
 ask_and_reflect = true
 automatic_review = true
-remove_previous_review_comment = true
 persistent_comment = true
 enable_review_labels_security = true
 enable_review_labels_effort = true
@@ -12,15 +35,15 @@ minimal_minutes_for_incremental_review = 10
 enable_help_text = false
 enable_auto_approval = true
 maximal_review_effort = 5
-extra_instructions = """
-- 日本語で回答してください
+extra_instructions = """\
+- 必ず日本語で回答してください
 - タイトルは feat:, chore:, test:, fix:, ci:, docs: などのcommitlint パターンの接頭辞を含む
 """
 
 [pr_code_suggestions]
 summarize = true
-extra_instructions = """
-- 日本語で回答してください
+extra_instructions = """\
+- 必ず日本語で回答してください
 - 以下の原則に従ってコメントしてください。
   - URLなどの構造化テキストを文字列結合で作ってはいけない。
   - 置換でいじってはいけない
@@ -36,12 +59,8 @@ extra_instructions = """
 
 [pr_update_changelog]
 push_changelog_changes = false
-
-[pr_reviewer]
-num_code_suggestions = 2
-inline_code_comments = true
-extra_instructions = """
-- 日本語で回答してください
+extra_instructions = """\
+- 必ず日本語で回答してください
 - 以下の原則に従ってコメントしてください。
   - URLなどの構造化テキストを文字列結合で作ってはいけない。
   - 置換でいじってはいけない
@@ -59,10 +78,6 @@ extra_instructions = """
 auto_review = true
 auto_describe = true
 auto_improve = true
-
-[config]
-model = "gpt-3.5-turbo-0613"
-enable_custom_labels = true
 
 [custom_labels."Link Update"]
 description = "Whenever any link in the code is updated"
