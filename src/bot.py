@@ -24,7 +24,9 @@ def get_thread_text(event):
     if thread_ts:
         response = slack_client.conversations_replies(channel=event["channel"], ts=thread_ts)
         messages = response.get("messages", [])
-        text = ",".join([re.sub("<.*?> ", "", message["text"]) for message in messages])
+
+        pattern = re.compile("<.*?> ")
+        text = ",".join([pattern.sub("", message["text"]) for message in messages])
 
     text = re.sub("<.*?> ", "", text)
     logging.debug(f"request: {text}")
