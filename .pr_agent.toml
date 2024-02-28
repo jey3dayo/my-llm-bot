@@ -30,7 +30,7 @@ extra_instructions = """
     - OpenAI API
     - langchain
     - Bolt
-    - Pyright
+    - pep8
     - black
 """
 
@@ -51,9 +51,10 @@ extra_instructions = """
     - OpenAI API
     - langchain
     - Bolt
-    - Pyright
+    - pep8
     - black
 """
+
 [github_action_config]
 auto_review = true
 auto_describe = true
