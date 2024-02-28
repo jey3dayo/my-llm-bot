@@ -24,20 +24,6 @@ jobs:
     name: Run pr agent on every pull request
 
     if: ${{ github.event.sender.type != 'Bot' }}
-    env:
-      COMMON_INSTRUCTIONS: >-
-        - 日本語で回答してください
-        - 以下の原則に従ってコメントしてください。
-          - URLなどの構造化テキストを文字列結合で作ってはいけない。
-          - 置換でいじってはいけない
-          - オブジェクトまたはライブラリを使ってください
-          - 利用技術
-            - Python v3.12
-            - OpenAI API
-            - langchain
-            - Bolt
-            - Pyright
-            - black
     steps:
       - name: PR Agent action step
         id: pragent
@@ -45,19 +31,3 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ACTION.AUTO_REVIEW: true
-          GITHUB_ACTION.AUTO_IMPROVE: true
-
-          # レビュー総評コメントである "PR Feedback" への追加プロンプト
-          PR_REVIEWER.EXTRA_INSTRUCTIONS: ${{ env.COMMON_INSTRUCTIONS }}
-          # プルリクの要約 "PR Descrition" に関する追加プロンプト
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: >-
-            日本語で回答してください。
-            タイトルは feat: 、chore: 、test: 、fix: 、ci: 、docs: などの
-            commitlint パターンの接頭辞を含む必要があります。
-          # /improve で呼び出す修正コードの "Suggestion" 時の追加プロンプト
-          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: ${{ env.COMMON_INSTRUCTIONS }}
-          # /improve コメントの後に提案されるコードの数。
-          PR_CODE_SUGGESTIONS.NUM_CODE_SUGGESTIONS: 2
-          # Modelを変更
-          CONFIG.MODEL: gpt-3.5-turbo-0613
