@@ -42,6 +42,7 @@ skip-magic-trailing-comma = false
 line-ending = "lf"
 
 [tool.taskipy.tasks]
+start-bot = "python src/bot.py"
 fmt = "task fmt-black"
 fmt-black = "black src"
 lint = "task lint-black && task lint-ruff"
