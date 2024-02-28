@@ -6,12 +6,7 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from utils import openai_utils
-from utils.constants import (
-    GPT4_ROOM_ID,
-    LOGGING_LEVEL,
-    SLACK_APP_TOKEN,
-    SLACK_BOT_TOKEN,
-)
+from utils.constants import GPT4_ROOM_ID, LOGGING_LEVEL, SLACK_APP_TOKEN, SLACK_BOT_TOKEN
 
 # Initialize the Slack client
 slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
@@ -27,9 +22,7 @@ def get_thread_text(event):
     text = event.get("text", "")
     thread_ts = event.get("thread_ts")
     if thread_ts:
-        response = slack_client.conversations_replies(
-            channel=event["channel"], ts=thread_ts
-        )
+        response = slack_client.conversations_replies(channel=event["channel"], ts=thread_ts)
         messages = response.get("messages", [])
         text = ",".join([re.sub("<.*?> ", "", message["text"]) for message in messages])
 
@@ -87,9 +80,7 @@ def direct_message_handler(body, say):
 
         # スレッドの全てのメッセージを取得
         send_message = get_thread_text(event)
-        response_message = openai_utils.get_chat_response(
-            send_message, openai_utils.llm
-        )
+        response_message = openai_utils.get_chat_response(send_message, openai_utils.llm)
         if response_message.strip():
             say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
 
