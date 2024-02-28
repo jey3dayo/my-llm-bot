@@ -15,16 +15,9 @@ langchain-openai = "^0.0.6"
 slack-sdk = "^3.27.0"
 
 [tool.poetry.group.dev.dependencies]
-flake8 = "^7.0"
 black = "^24.2"
 isort = "^5.13"
-flake8-isort = "^6.1"
-flake8-bugbear = "^24.2"
-flake8-builtins = "^2.2"
-flake8-eradicate = "^1.5"
-flake8-unused-arguments = "^0.0"
-flake8-pytest-style = "^1.7"
-pep8-naming = "^0.13"
+ruff = "^0.2.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -32,14 +25,22 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
 profile = "black"
-line_length = 160
+line_length = 120
 
 [tool.black]
 target-version = ['py39']
-line-length = 160
+line-length = 120
 
-[tool.flake8]
-max-line-length = 160
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
 exclude = [".venv", ".git", "__pycache__"]
-extend-ignore = ["E203", "W503"]
-max-complexity = 18
+select = ["E", "F", "RET502", "RET503", "T20"]
+ignore = ["E501", "E722", "T201"]
+
+[tool.ruff.format]
+indent-style = "space"
+quote-style = "double"
+skip-magic-trailing-comma = false
+line-ending = "lf"

@@ -21,4 +21,4 @@ jobs:
           poetry install
       - name: Lint
         run: |
-          poetry run flake8 src
+          poetry run ruff src
