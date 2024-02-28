@@ -6,9 +6,9 @@ from slack_sdk.errors import SlackApiError
 
 load_dotenv()
 # OAuth Token
-SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
+SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 # App-Level Token
-SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
+SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
 
 # Slackクライアントの初期化
 client = WebClient(token=SLACK_BOT_TOKEN)
