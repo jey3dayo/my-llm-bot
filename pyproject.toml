@@ -44,13 +44,7 @@ line-ending = "lf"
 
 [tool.taskipy.tasks]
 start-bot = "python src/bot.py"
-dev = """ \
-watchmedo shell-command \
-    --patterns="*.py;*.toml" \
-    --recursive \
-    --command='python src/bot.py' \
-    .
-"""
+dev = 'watchmedo auto-restart -p "*.py" -R python3 -- src/bot.py'
 fmt = "task fmt-black"
 fmt-black = "black src"
 lint = "task lint-black && task lint-ruff"
