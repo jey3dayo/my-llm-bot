@@ -18,7 +18,7 @@ jobs:
         id: venv_cache
         with:
           path: .venv
-          key: venv-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.venv_cache.outputs.cache-hit != 'true'
         run: |
