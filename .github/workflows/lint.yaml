@@ -1,35 +1,28 @@
 name: Lint
-
 on:
   push:
   pull_request:
-
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: venv_cache
         with:
           path: .venv
-          key: venv-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
-
+          key: venv-${{ runner.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         if: steps.venv_cache.outputs.cache-hit != 'true'
         run: |
           poetry install
-
       - name: Lint
         run: |
           poetry run task lint

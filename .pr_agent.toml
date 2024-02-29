@@ -18,8 +18,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pycodestyle
-    - black
+    - ruff
 """
 
 
@@ -54,8 +53,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pycodestyle
-    - black
+    - ruff
 """
 
 [pr_update_changelog]
@@ -71,8 +69,7 @@ extra_instructions = """\
     - OpenAI API
     - langchain
     - Bolt
-    - pycodestyle
-    - black
+    - ruff
 """
 
 [github_action_config]
