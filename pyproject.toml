@@ -18,6 +18,7 @@ slack-sdk = "^3.27.0"
 black = "^24.2"
 ruff = "^0.2.2"
 taskipy = "^1.12.2"
+watchdog = "^4.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -43,6 +44,13 @@ line-ending = "lf"
 
 [tool.taskipy.tasks]
 start-bot = "python src/bot.py"
+dev = """ \
+watchmedo shell-command \
+    --patterns="*.py;*.toml" \
+    --recursive \
+    --command='python src/bot.py' \
+    .
+"""
 fmt = "task fmt-black"
 fmt-black = "black src"
 lint = "task lint-black && task lint-ruff"
