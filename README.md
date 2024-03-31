@@ -2,7 +2,7 @@
 
 特定キーワードに反応してエモーションをつけたり、DMをすると返答するBotです。
 
-#how to run
+# how to run
 
 ```
 poetry install
