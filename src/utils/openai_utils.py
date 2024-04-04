@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from pydantic.v1 import SecretStr
 
-from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL, EXTRA_MODEL
+from .constants import DEFAULT_EMOTIONS, DEFAULT_IMAGE_MODEL, DEFAULT_MODEL, EXTRA_MODEL, MULTIPLIER_PATTERN
 from .csv import parse_csv
 
 # FIXME: RAGで使いたかった

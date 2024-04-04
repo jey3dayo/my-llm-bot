@@ -14,6 +14,8 @@ SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
 
 DEFAULT_MODEL = os.getenv("OPENAI_DEFAULT_MODEL", "gpt-3.5-turbo")
 
+DEFAULT_IMAGE_MODEL = os.getenv("OPENAI_DEFAULT_IMAGE_MODEL", "dall-e-3")
+
 EXTRA_MODEL = os.getenv("OPENAI_EXTRA_MODEL", "gpt-4-turbo-preview")
 
 DEFAULT_EMOTIONS = ["thumbsup"]
