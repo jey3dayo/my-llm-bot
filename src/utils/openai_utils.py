@@ -135,8 +135,7 @@ async def generate_images(prompt: str, quantity: int):
         "quality": "standard",
         "style": "natural",
         "n": quantity,
-        # "size": "1024x1024",
-        "size": "512x512",
+        "size": "1024x1024",
         "prompt": prompt,
     }
     res = await client.images.generate(**image_params)
