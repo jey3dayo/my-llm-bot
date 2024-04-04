@@ -8,7 +8,13 @@ from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
 from pydantic.v1 import SecretStr
 
-from .constants import DEFAULT_EMOTIONS, DEFAULT_IMAGE_MODEL, DEFAULT_MODEL, EXTRA_MODEL, MULTIPLIER_PATTERN
+from .constants import (
+    DEFAULT_EMOTIONS,
+    OPENAI_DEFAULT_IMAGE_MODEL,
+    OPENAI_DEFAULT_MODEL,
+    OPENAI_EXTRA_MODEL,
+    MULTIPLIER_PATTERN,
+)
 from .csv import parse_csv
 
 # FIXME: RAGで使いたかった
@@ -23,13 +29,13 @@ api_key = SecretStr(api_key_value)
 
 llm = ChatOpenAI(
     api_key=api_key,
-    model=DEFAULT_MODEL,
+    model=OPENAI_DEFAULT_MODEL,
     temperature=0.9,
 )
 
 extra_llm = ChatOpenAI(
     api_key=api_key,
-    model=EXTRA_MODEL,
+    model=OPENAI_EXTRA_MODEL,
     temperature=0.9,
 )
 
@@ -117,7 +123,7 @@ def get_party_call_response(client, message):
 async def generate_images(prompt: str, quantity: int):
     client = AsyncOpenAI()
     image_params: Dict[str, Union[str, int]] = {
-        "model": DEFAULT_IMAGE_MODEL,
+        "model": OPENAI_DEFAULT_IMAGE_MODEL,
         "quality": "standard",
         "style": "natural",
         "n": quantity,
