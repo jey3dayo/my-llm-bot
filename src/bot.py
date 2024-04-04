@@ -69,18 +69,20 @@ def imagine_command(ack, respond, command):
     try:
         ack()
         respond(response_type="ephemeral", text="loading...")
+        if command["text"] == "":
+            respond(response_type="ephemeral", text="please specify a prompt and try again.", replace_original=True)
+            return
+        response_blocks = openai_utils.create_image_response(command["text"])
+        respond(
+            response_type="in_channel",
+            blocks=response_blocks,
+            unfurl_media=True,
+            unfurl_links=True,
+            delete_original=True,
+        )
     except Exception as e:
         logging.error(f"Error generating images: {e}")
         respond(response_type="ephemeral", text="Error generating images. Please try again later.")
-
-    if command["text"] == "":
-        respond(response_type="ephemeral", text="please specify a prompt and try again.", replace_original=True)
-        return
-
-    response_blocks = openai_utils.create_image_response(command["text"])
-    respond(
-        response_type="in_channel", blocks=response_blocks, unfurl_media=True, unfurl_links=True, delete_original=True
-    )
 
 
 if __name__ == "__main__":
