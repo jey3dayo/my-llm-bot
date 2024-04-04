@@ -133,7 +133,6 @@ async def generate_images(prompt: str, quantity: int):
         image_params: Dict[str, Union[str, int]] = {
             "model": OPENAI_DEFAULT_IMAGE_MODEL,
             "quality": "standard",
-            "style": "natural",
             "n": quantity,
             "size": "1024x1024",
             "prompt": prompt,
