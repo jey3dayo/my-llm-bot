@@ -1,12 +1,20 @@
+import asyncio
 import logging
 import os
-
+from typing import Dict, Union
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
+from openai import AsyncOpenAI
 from pydantic.v1 import SecretStr
 
-from .constants import DEFAULT_EMOTIONS, DEFAULT_MODEL, EXTRA_MODEL
+from .constants import (
+    DEFAULT_EMOTIONS,
+    OPENAI_DEFAULT_IMAGE_MODEL,
+    OPENAI_DEFAULT_MODEL,
+    OPENAI_EXTRA_MODEL,
+    MULTIPLIER_PATTERN,
+)
 from .csv import parse_csv
 
 # FIXME: RAGで使いたかった
@@ -21,13 +29,13 @@ api_key = SecretStr(api_key_value)
 
 llm = ChatOpenAI(
     api_key=api_key,
-    model=DEFAULT_MODEL,
+    model=OPENAI_DEFAULT_MODEL,
     temperature=0.9,
 )
 
 extra_llm = ChatOpenAI(
     api_key=api_key,
-    model=EXTRA_MODEL,
+    model=OPENAI_EXTRA_MODEL,
     temperature=0.9,
 )
 
@@ -110,3 +118,48 @@ def get_party_call_response(client, message):
         add_reactions_to_channel(client, channel, emotion.strip(), thread_ts)
 
     return response_content
+
+
+async def generate_images(prompt: str, quantity: int):
+    client = AsyncOpenAI()
+    image_params: Dict[str, Union[str, int]] = {
+        "model": OPENAI_DEFAULT_IMAGE_MODEL,
+        "quality": "standard",
+        "style": "natural",
+        "n": quantity,
+        # "size": "1024x1024",
+        "size": "512x512",
+        "prompt": prompt,
+    }
+    res = await client.images.generate(**image_params)
+    await client.close()
+    return res.data
+
+
+def create_image_response(prompt: str):
+    blocks = []
+    count = 1
+    prompt_list = prompt.split(" ")[0]
+    multiplier = prompt_list[0]
+    if MULTIPLIER_PATTERN.match(multiplier):
+        value = int(multiplier[1:])
+        if 0 < value < 11:
+            count = value
+        prompt = "".join(prompt_list[1:])
+
+    print("------------------")
+    print(f"prompt: {prompt}")
+    print("------------------")
+
+    images = asyncio.run(generate_images(prompt, count))
+
+    for image in images:
+        blocks.append(
+            {
+                "type": "image",
+                "title": {"type": "plain_text", "text": prompt, "emoji": True},
+                "image_url": image.url,
+                "alt_text": prompt,
+            }
+        )
+    return blocks

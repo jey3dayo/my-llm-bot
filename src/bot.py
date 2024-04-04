@@ -4,7 +4,6 @@ import re
 import slack_sdk
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-
 from utils import openai_utils
 from utils.constants import GPT4_ROOM_ID, LOGGING_LEVEL, SLACK_APP_TOKEN, SLACK_BOT_TOKEN
 
@@ -85,6 +84,20 @@ def direct_message_handler(body, say):
         response_message = openai_utils.get_chat_response(send_message, openai_utils.llm)
         if response_message.strip():
             say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
+
+
+@app.command("/imagine")
+def imagine_command(ack, respond, command):
+    ack()
+    respond(response_type="ephemeral", text="loading...")
+    if command["text"] == "":
+        respond(response_type="ephemeral", text="please specify a prompt and try again.", replace_original=True)
+        return
+
+    response_blocks = openai_utils.create_image_response(command["text"])
+    respond(
+        response_type="in_channel", blocks=response_blocks, unfurl_media=True, unfurl_links=True, delete_original=True
+    )
 
 
 if __name__ == "__main__":
