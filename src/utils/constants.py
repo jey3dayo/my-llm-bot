@@ -1,4 +1,5 @@
 import os
+import re
 
 from dotenv import load_dotenv
 
@@ -21,3 +22,7 @@ EXTRA_MODEL = os.getenv("OPENAI_EXTRA_MODEL", "gpt-4-turbo-preview")
 DEFAULT_EMOTIONS = ["thumbsup"]
 
 GPT4_ROOM_ID = os.getenv("GPT4_ROOM_ID", "")
+
+LOADING_STATE = "loading..."
+
+MULTIPLIER_PATTERN = re.compile(r"\Ax[1-9][0-9]*")
