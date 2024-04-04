@@ -7,7 +7,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
 from pydantic.v1 import SecretStr
-
 from .constants import (
     DEFAULT_EMOTIONS,
     OPENAI_DEFAULT_IMAGE_MODEL,
