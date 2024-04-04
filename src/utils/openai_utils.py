@@ -14,6 +14,7 @@ from .constants import (
     OPENAI_DEFAULT_MODEL,
     OPENAI_EXTRA_MODEL,
     MULTIPLIER_PATTERN,
+    GPT4_ROOM_ID,
 )
 from .csv import parse_csv
 
@@ -80,6 +81,14 @@ emotions_prompt = ChatPromptTemplate.from_messages(
         ("user", "{input}"),
     ]
 )
+
+
+def get_active_llm(channel):
+    """Get the active language model based on the channel."""
+    active_llm = llm
+    if channel and GPT4_ROOM_ID != "" and channel == GPT4_ROOM_ID:
+        active_llm = extra_llm
+    return active_llm
 
 
 def get_chat_response(input, llm_model=llm):

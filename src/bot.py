@@ -5,7 +5,11 @@ import slack_sdk
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from utils import openai_utils
-from utils.constants import GPT4_ROOM_ID, LOGGING_LEVEL, SLACK_APP_TOKEN, SLACK_BOT_TOKEN
+from utils.constants import (
+    LOGGING_LEVEL,
+    SLACK_APP_TOKEN,
+    SLACK_BOT_TOKEN,
+)
 
 # Initialize the Slack client
 slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
@@ -59,11 +63,8 @@ def mention_handler(body, say):
     # スレッドの全てのメッセージを取得
     send_message = get_thread_text(event)
 
-    active_llm = openai_utils.llm
-
     channel = event.get("channel")
-    if channel and GPT4_ROOM_ID != "" and channel == GPT4_ROOM_ID:
-        active_llm = openai_utils.extra_llm
+    active_llm = openai_utils.get_active_llm(channel)
     response_message = openai_utils.get_chat_response(send_message, active_llm)
 
     if response_message.strip():
@@ -88,8 +89,13 @@ def direct_message_handler(body, say):
 
 @app.command("/imagine")
 def imagine_command(ack, respond, command):
-    ack()
-    respond(response_type="ephemeral", text="loading...")
+    try:
+        ack()
+        respond(response_type="ephemeral", text="loading...")
+    except Exception as e:
+        logging.error(f"Error generating images: {e}")
+        respond(response_type="ephemeral", text="Error generating images. Please try again later.")
+
     if command["text"] == "":
         respond(response_type="ephemeral", text="please specify a prompt and try again.", replace_original=True)
         return
