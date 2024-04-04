@@ -1,39 +1,16 @@
 import logging
-import re
 
-import slack_sdk
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from utils import openai_utils
+from utils import slack_utils, openai_utils
 from utils.constants import (
     LOGGING_LEVEL,
     SLACK_APP_TOKEN,
     SLACK_BOT_TOKEN,
 )
 
-# Initialize the Slack client
-slack_client = slack_sdk.WebClient(token=SLACK_BOT_TOKEN)
-
-# [OAuth Token]読み込み
 app = App(token=SLACK_BOT_TOKEN)
-
 logging.basicConfig(encoding="utf-8", level=LOGGING_LEVEL)
-
-
-def get_thread_text(event):
-    """Retrieve all messages from a thread."""
-    text = event.get("text", "")
-    thread_ts = event.get("thread_ts")
-    if thread_ts:
-        response = slack_client.conversations_replies(channel=event["channel"], ts=thread_ts)
-        messages = response.get("messages", [])
-
-        pattern = re.compile("<.*?> ")
-        text = ",".join([pattern.sub("", message["text"]) for message in messages])
-
-    text = re.sub("<.*?> ", "", text)
-    logging.debug(f"request: {text}")
-    return text
 
 
 # 反応する発言内容を記載
@@ -61,7 +38,7 @@ def mention_handler(body, say):
     logging.info(f"メンションされました: {event['text']}")
 
     # スレッドの全てのメッセージを取得
-    send_message = get_thread_text(event)
+    send_message = slack_utils.get_thread_text(event)
 
     channel = event.get("channel")
     active_llm = openai_utils.get_active_llm(channel)
@@ -81,7 +58,7 @@ def direct_message_handler(body, say):
         logging.info(f"DMが送られました: {event['text']}")
 
         # スレッドの全てのメッセージを取得
-        send_message = get_thread_text(event)
+        send_message = slack_utils.get_thread_text(event)
         response_message = openai_utils.get_chat_response(send_message, openai_utils.llm)
         if response_message.strip():
             say(text=response_message, channel=event["channel"], thread_ts=event["ts"])
