@@ -7,13 +7,13 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from openai import AsyncOpenAI
 from pydantic.v1 import SecretStr
-
 from .constants import (
     DEFAULT_EMOTIONS,
     OPENAI_DEFAULT_IMAGE_MODEL,
     OPENAI_DEFAULT_MODEL,
     OPENAI_EXTRA_MODEL,
     MULTIPLIER_PATTERN,
+    GPT4_ROOM_ID,
 )
 from .csv import parse_csv
 
@@ -82,6 +82,14 @@ emotions_prompt = ChatPromptTemplate.from_messages(
 )
 
 
+def get_active_llm(channel):
+    """Get the active language model based on the channel."""
+    active_llm = llm
+    if channel and GPT4_ROOM_ID != "" and channel == GPT4_ROOM_ID:
+        active_llm = extra_llm
+    return active_llm
+
+
 def get_chat_response(input, llm_model=llm):
     chain = prompt | llm_model
     # TODO: convert safe input
@@ -121,19 +129,17 @@ def get_party_call_response(client, message):
 
 
 async def generate_images(prompt: str, quantity: int):
-    client = AsyncOpenAI()
-    image_params: Dict[str, Union[str, int]] = {
-        "model": OPENAI_DEFAULT_IMAGE_MODEL,
-        "quality": "standard",
-        "style": "natural",
-        "n": quantity,
-        # "size": "1024x1024",
-        "size": "512x512",
-        "prompt": prompt,
-    }
-    res = await client.images.generate(**image_params)
-    await client.close()
-    return res.data
+    async with AsyncOpenAI() as client:
+        image_params: Dict[str, Union[str, int]] = {
+            "model": OPENAI_DEFAULT_IMAGE_MODEL,
+            "quality": "standard",
+            "style": "natural",
+            "n": quantity,
+            "size": "1024x1024",
+            "prompt": prompt,
+        }
+        res = await client.images.generate(**image_params)
+        return res.data
 
 
 def create_image_response(prompt: str):
@@ -147,10 +153,7 @@ def create_image_response(prompt: str):
             count = value
         prompt = "".join(prompt_list[1:])
 
-    print("------------------")
-    print(f"prompt: {prompt}")
-    print("------------------")
-
+    logging.info(f"Generating images for prompt: {prompt}")
     images = asyncio.run(generate_images(prompt, count))
 
     for image in images:
