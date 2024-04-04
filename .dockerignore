@@ -1,5 +1,6 @@
 .git/
 .github/
+README.md
 
 venv/
 .venv/
