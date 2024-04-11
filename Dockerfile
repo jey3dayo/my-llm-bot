@@ -40,4 +40,4 @@ RUN poetry install --no-interaction --no-dev --no-root
 
 COPY . /app
 
-CMD ["poetry", "run", "python", "bot.py"]
+CMD ["poetry", "run", "python", "src/bot.py"]
