@@ -72,7 +72,8 @@ def imagine_command(ack, respond, command):
         if command["text"] == "":
             respond(response_type="ephemeral", text="please specify a prompt and try again.", replace_original=True)
             return
-        response_blocks = openai_utils.create_image_response(command["text"])
+        response_blocks = openai_utils.create_image_response(app.client, command["channel_id"], command["text"])
+
         respond(
             response_type="in_channel",
             blocks=response_blocks,

@@ -1,6 +1,8 @@
 import asyncio
 import logging
 import os
+import io
+import requests
 from typing import Dict, Union
 import slack_sdk.errors
 from langchain_core.prompts import ChatPromptTemplate
@@ -14,6 +16,7 @@ from .constants import (
     OPENAI_EXTRA_MODEL,
     MULTIPLIER_PATTERN,
     GPT4_ROOM_ID,
+    OPENAI_IMAGE_QUORITY,
 )
 from .csv import parse_csv
 
@@ -134,14 +137,14 @@ async def generate_images(prompt: str, quantity: int):
             "model": OPENAI_DEFAULT_IMAGE_MODEL,
             "quality": "standard",
             "n": quantity,
-            "size": "1024x1024",
+            "size": OPENAI_IMAGE_QUORITY,
             "prompt": prompt,
         }
         res = await client.images.generate(**image_params)
         return res.data
 
 
-def create_image_response(prompt: str):
+def create_image_response(client, channel, prompt: str):
     blocks = []
     count = 1
     prompt_list = prompt.split(" ")[0]
@@ -156,12 +159,18 @@ def create_image_response(prompt: str):
     images = asyncio.run(generate_images(prompt, count))
 
     for image in images:
-        blocks.append(
-            {
-                "type": "image",
-                "title": {"type": "plain_text", "text": prompt, "emoji": True},
-                "image_url": image.url,
-                "alt_text": prompt,
-            }
+        # 画像をSlackにアップロード
+        response = client.files_upload_v2(
+            channels=channel,
+            initial_comment=prompt,
+            file=io.BytesIO(requests.get(image.url).content),
+            filename=f"{prompt}.png",
         )
+        image_block = {
+            "type": "image",
+            "title": {"type": "plain_text", "text": prompt, "emoji": True},
+            "image_url": response["file"]["url_private"],
+            "alt_text": prompt,
+        }
+        blocks.append(image_block)
     return blocks
