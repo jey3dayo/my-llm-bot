@@ -5,8 +5,15 @@
 # how to run
 
 ```
+pip install --upgrade poetry
 poetry install
 poetry run task start-bot
+```
+
+# how to dev
+
+```
+poetry run task dev
 ```
 
 # Features
