@@ -1,5 +1,6 @@
 import os
 import re
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,9 +10,9 @@ SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN")
 SLACK_APP_TOKEN = os.getenv("SLACK_APP_TOKEN")
 
 # OpenAI
-OPENAI_DEFAULT_MODEL = os.getenv("OPENAI_DEFAULT_MODEL", "gpt-3.5-turbo")
-OPENAI_EXTRA_MODEL = os.getenv("OPENAI_EXTRA_MODEL", "gpt-4-turbo-preview")
-OPENAI_DEFAULT_IMAGE_MODEL = os.getenv("OPENAI_DEFAULT_IMAGE_MODEL", "dall-e-3")
+OPENAI_DEFAULT_MODEL = os.getenv("OPENAI_DEFAULT_MODEL", "gpt-4o")
+OPENAI_EXTRA_MODEL = os.getenv("OPENAI_EXTRA_MODEL", "gpt-4o")
+OPENAI_DEFAULT_IMAGE_MODEL = os.getenv("OPENAI_DEFAULT_IMAGE_MODEL", "gpt-image-1")
 OPENAI_IMAGE_QUORITY = "1024x1024"
 
 # Logging
